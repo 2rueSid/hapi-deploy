@@ -1,11 +1,10 @@
 
 output "cluster_endpoint" {
-  value = data.aws_eks_cluster.cluster.endpoint
+  value = module.eks.cluster_endpoint
 }
 
 output "aws_eks_cluster_auth" {
-  value = data.aws_eks_cluster.cluster.certificate_authority.0.data
-
+  value = module.eks.cluster_certificate_authority_data
 }
 
 output "cluster_token" {

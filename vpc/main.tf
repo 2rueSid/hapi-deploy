@@ -18,6 +18,8 @@ module "vpc" {
   private_subnets = local.private_subnets
   public_subnets  = local.public_subnets
 
+  default_vpc_name = "${local.vpc_name}-default"
+
   map_public_ip_on_launch = true
   enable_nat_gateway      = true
   create_igw              = true
@@ -31,6 +33,15 @@ module "vpc" {
   }
 }
 
+resource "aws_default_vpc" "default" {
+  tags = {
+    Name = "Default VPC"
+  }
+}
+
 resource "aws_default_subnet" "default_az1" {
-  availability_zone = local.azs[0]
+  availability_zone = local.azs.0
+  tags = {
+    Name = "defaukt SB"
+  }
 }

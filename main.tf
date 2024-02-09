@@ -13,8 +13,8 @@ locals {
   engine_version = "14"
   instance_class = "db.t3.micro"
   db_name        = "hapi"
-  db_username    = "admin"
-  password       = "admin"
+  db_username    = "root"
+  password       = "7Wu2!qy0\\M'T"
 
 }
 
@@ -28,11 +28,10 @@ module "vpc" {
 }
 
 module "sg" {
-  depends_on      = [module.vpc]
   source          = "./sg"
   private_sb_cidr = module.vpc.private_subnets_cidr_blocks
   vpc_id          = module.vpc.vpc_id
-
+  rds_vpc_id      = module.vpc.default_vpc_id
   providers = {
     aws = aws
   }
@@ -40,8 +39,7 @@ module "sg" {
 
 module "rds" {
   source         = "./rds"
-  depends_on     = [module.sg, module.vpc]
-  vpc_sg_ids     = module.sg.rds_sg_id
+  vpc_sg_ids     = [module.sg.rds_sg_id]
   storage        = 10
   engine         = local.engine
   engine_version = local.engine_version
@@ -56,11 +54,10 @@ module "rds" {
 }
 
 module "eks" {
-  depends_on = [module.vpc, module.sg, module.rds]
-  source     = "./eks"
+  source = "./eks"
 
   private_subnets = module.vpc.private_subnets
-  sg_ids          = module.sg.eks_sg_id
+  sg_ids          = [module.sg.eks_sg_id]
   intra_subnets   = module.vpc.intra_subnets
   vpc_id          = module.vpc.vpc_id
 
@@ -69,8 +66,8 @@ module "eks" {
   }
 }
 
+
 module "k8s" {
-  depends_on  = [module.eks]
   source      = "./k8s"
   db_host     = module.rds.db_host
   db_name     = local.db_name

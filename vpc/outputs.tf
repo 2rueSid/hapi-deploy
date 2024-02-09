@@ -15,5 +15,9 @@ output "intra_subnets" {
 output "private_subnets" {
   description = "private_subnets"
   value       = module.vpc.private_subnets
+}
 
+output "default_vpc_id" {
+  description = "default vpc id"
+  value       = aws_default_vpc.default.id
 }

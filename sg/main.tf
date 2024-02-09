@@ -1,7 +1,7 @@
 resource "aws_security_group" "rds_sg" {
   name        = "hapi-db-sg"
   description = "Security group for RDS instance"
-  vpc_id      = var.vpc_id
+  vpc_id      = var.rds_vpc_id
 
   ingress {
     description = "open for all ingress on 5432"

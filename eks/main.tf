@@ -4,7 +4,7 @@ locals {
 
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
-  version = "20.2.0"
+  version = "20.2.1"
 
   cluster_name    = local.cluster_name
   cluster_version = "1.29"
@@ -26,11 +26,11 @@ module "eks" {
 
   eks_managed_node_group_defaults = {
     ami_type                   = "AL2_x86_64"
-    instance_types             = ["m2.small"]
+    instance_types             = ["t3.medium"]
     iam_role_attach_cni_policy = true
 
     attach_cluster_primary_security_group = true
-    vpc_security_group_ids                = [var.sg_ids]
+    vpc_security_group_ids                = var.sg_ids
     subnet_ids                            = var.private_subnets
   }
   eks_managed_node_groups = {
@@ -59,12 +59,12 @@ module "vpc_cni_irsa" {
       namespace_service_accounts = ["kube-system:aws-node"]
     }
   }
-
 }
+
 data "aws_eks_cluster" "cluster" {
-  name = module.eks.cluster_id
+  name = module.eks.cluster_name
 }
 
 data "aws_eks_cluster_auth" "cluster" {
-  name = module.eks.cluster_id
+  name = module.eks.cluster_name
 }

@@ -7,3 +7,6 @@ variable "vpc_id" {
   description = "vpc id"
   type        = string
 }
+variable "rds_vpc_id" {
+  type = string
+}

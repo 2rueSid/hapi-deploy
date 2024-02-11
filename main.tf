@@ -12,9 +12,9 @@ locals {
   engine         = "postgres"
   engine_version = "14"
   instance_class = "db.t3.micro"
-  db_name        = "hapi"
-  db_username    = "root"
-  password       = "7Wu2!qy0\\M'T"
+  db_name        = var.db_name
+  db_username    = var.db_username
+  password       = var.password
 
 }
 
